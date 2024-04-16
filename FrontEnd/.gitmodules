@@ -1,0 +1,3 @@
+[submodule "src"]
+	path = src
+	url = https://gitlab.fis.vn/pb22/ihrp/mobility/v33/reactnative/sovico/src.git
