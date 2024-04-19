@@ -9,8 +9,11 @@ interface IParams {
   days?: number;
 }
 
+// const forecastEndpoint = (params :any) =>
+//   `https://api.weatherapi.com/v1/forecast.json?key=${weatherApiKey}&q=${params.cityName}&days=${params.days}&hours=24`;
+
 const forecastEndpoint = (params :any) =>
-  `https://api.weatherapi.com/v1/forecast.json?key=${weatherApiKey}&q=${params.cityName}&days=${params.days}&hours=24`;
+  `https://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=${params.cityName}&aqi=yes`;
 
 const apiCall = async (endpoint :any) => {
   const options = {
@@ -27,8 +30,6 @@ const apiCall = async (endpoint :any) => {
 };
 
 export const fetchWeatherForecast = (params: IParams) => {
-  console.log("🚀 ~ fetchWeatherForecast ~ params:", params)
   const forecastUrl = forecastEndpoint(params);
-  console.log("🚀 ~ fetchWeatherForecast ~ forecastUrl:", forecastUrl)
   return apiCall(forecastUrl);
 };

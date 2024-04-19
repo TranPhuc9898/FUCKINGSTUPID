@@ -13,7 +13,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import AnimatedGradient from '../../components/bloom-palette/Tweener';
-import {_} from 'lodash';
+import _ from 'lodash';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -21,7 +21,7 @@ import Animated, {
 import useTabBarAnimation from '../../navigation/tabBarNavigation/useTabBarAnimation';
 import WriteText from '../../components/write-text';
 import FindBar from '../../components/find-bar';
-import useFetch from './hook';
+
 import { useEffect, useState } from 'react';
 import { fetchWeatherForecast } from 'api/weather';
 const windowDimensions = Dimensions.get('screen');
@@ -36,41 +36,13 @@ const HomeScreen = () => {
 
   const {scrollHandler} = useTabBarAnimation();
 
-  const [data, setData] = useState<any | any>()
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [error, setError] = useState<Error | null>(null)
-
-  const DAY_OF_WEEK = 7
-  // Call API 
-  const fetchApiWeather = async () => {
-    setIsLoading(true)
-    await fetchWeatherForecast({
-      cityName: "SaiGon",
-      days: DAY_OF_WEEK
-    }).then(data => {
-      console.log('data', data)
-      setData(data)
-    })
-    await setIsLoading(false)
-  }
-
-  useEffect(() => {
-    fetchApiWeather()
-  }, [])
 
   return (
     <AnimatedGradient
       style={styles.flex}
       colors={[`rgba(${isActive}, 0.3)`, `rgb(${isActive})`]}>
-      {/* Đưa FlatList và Button vào đây, loại bỏ ScrollView bên ngoài */}
-      {/* <SafeAreaView>
-        <View style={{backgroundColor: 'red'}}>
-          <Text>"hello</Text>
-        </View>
-      </SafeAreaView> */}
-
+        
       {/* View: Header Avart + Notification */}
-
       <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={16}
@@ -107,7 +79,7 @@ const HomeScreen = () => {
 
         {/* FindBar Temperature */}
         <View>
-          <FindBar data={data}/>
+          <FindBar />
         </View>
       </Animated.ScrollView>
     </AnimatedGradient>
