@@ -1,16 +1,17 @@
 // HomeStack.tsx
-import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import * as React from 'react'
+import { NavigationContainer } from '@react-navigation/native'
 import {
   BottomTabBarProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/HomeScreen/HomeScreen';
-import SettingScreen from '../screens/SettingScreen/SettingScreen';
+  createBottomTabNavigator
+} from '@react-navigation/bottom-tabs'
+import HomeScreen from '../screens/HomeScreen/HomeScreen'
+import SettingScreen from '../screens/SettingScreen/SettingScreen'
 // import {useSelector} from 'react-redux';
-import CustomTabBar from './tabBarNavigation/CustomTabBar';
+import CustomTabBar from './tabBarNavigation/CustomTabBar'
+import LoginScreen from 'screens/LoginScreen'
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator()
 
 const HomeTabNavigator = () => {
   // const isTabBarVisible = useSelector((state: any) => state.tabBar.isVisible); // Giả sử tabBar.isVisible là trạng thái quản lý hiển thị của bottomTabBar
@@ -21,22 +22,29 @@ const HomeTabNavigator = () => {
       // screenOptions={{
       //   tabBarStyle: {display: isTabBarVisible ? 'flex' : 'none'}, // Sử dụng trạng thái để ẩn hoặc hiện tabBar
       // }}>
-      tabBar={(props: BottomTabBarProps) => <CustomTabBar {...props} />}>
+      tabBar={(props: BottomTabBarProps) => <CustomTabBar {...props} />}
+    >
       <Tab.Screen
         name="HomeScreen"
         component={HomeScreen}
         options={{
           headerShown: false,
-          tabBarLabel: 'Home',
+          tabBarLabel: 'Home'
         }}
       />
       <Tab.Screen
         name="SettingScreen"
         component={SettingScreen}
-        options={{headerShown: false, tabBarLabel: 'Settings'}}
+        options={{ headerShown: false, tabBarLabel: 'Settings' }}
+      />
+
+      <Tab.Screen
+        name="LoginScreen"
+        component={LoginScreen}
+        options={{ headerShown: false, tabBarLabel: 'CC' }}
       />
     </Tab.Navigator>
-  );
-};
+  )
+}
 
-export default HomeTabNavigator;
+export default HomeTabNavigator

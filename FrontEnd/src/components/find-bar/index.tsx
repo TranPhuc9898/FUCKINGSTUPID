@@ -1,53 +1,53 @@
 import { Dimensions, StyleSheet, Text, View, ViewStyle } from 'react-native'
 import * as React from 'react'
 import LottieView from 'lottie-react-native'
-import { getIcons } from 'constants/Helper'
-import { BlurView, VibrancyView } from '@react-native-community/blur'
+import { BlurView } from '@react-native-community/blur'
 import { useEffect, useState } from 'react'
 import { fetchWeatherForecast } from 'api/weather'
 import { useSelector } from 'react-redux'
 
-// Width Height Demensions
 const witdh = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
-// Định nghĩa Interface cho props của FindBar, bao gồm style
 interface IFindBarProps {
   style?: ViewStyle
-  data?: any // Sử dụng ViewStyle từ React Native
+  data?: any
 }
 
 const FindBar: React.FC<IFindBarProps> = ({ style }) => {
   const [data, setData] = useState<any>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [error, setError] = useState<Error | null>(null)
+  const [error, setError] = useState<Error | any>(null)
 
   const DAY_OF_WEEK = 7
-  // Call API
+
   const fetchApiWeather = async () => {
     setIsLoading(true)
-    await fetchWeatherForecast({
-      cityName: 'SaiGon',
-      days: DAY_OF_WEEK
-    }).then(data => {
-      setData(data)
-    })
-    await setIsLoading(false)
+    try {
+      const weatherData = await fetchWeatherForecast({
+        cityName: 'SaiGon',
+        days: DAY_OF_WEEK
+      });
+      if (weatherData) {
+        setData(weatherData);
+      } else {
+        console.error('Data không tồn tại hoặc không có thuộc tính uri');
+      }
+    } catch (error) {
+      console.error('Lỗi khi gọi API:', error);
+      setError(error);
+    }
+    setIsLoading(false);
   }
 
   useEffect(() => {
     fetchApiWeather()
-  }, [])
-  // Trong component của bạn
-
-
-
-
-  //  REDUX
+  },[])
 
   const backgroundColor = useSelector((state: any) => state.color.color);
 
   const getIconsEnviroment = (temp: any) => {
+    console.log("🚀 ~ getIconsEnviroment ~ temp:", temp)
     if (temp >= 30 && temp <= 60) {
       return require(`../../assets/image/hot.json`)
     }
@@ -59,9 +59,8 @@ const FindBar: React.FC<IFindBarProps> = ({ style }) => {
     }
   }
 
-  // Render View Image
-  const renderImage = (abc: any) => {
-    const renderImageStable = getIconsEnviroment(abc)
+  const renderImage = (temp: any) => {
+    const renderImageStable = getIconsEnviroment(temp)
     return (
       <View>
         <LottieView
@@ -75,27 +74,26 @@ const FindBar: React.FC<IFindBarProps> = ({ style }) => {
   }
 
   return (
-    // <View style={[styles.containerFindBar]}>
-
-    // </View>
     <>
       <BlurView
         style={styles.containerFindBar}
-        blurType="light" // Loại blur: light, dark, xlight,...
-        blurAmount={10} // Độ mờ từ 1 đến 100
+        blurType="light"
+        blurAmount={10}
       >
         <View style={styles.viewText}>
           <View style={{ paddingTop: 15 }}>
-            {renderImage(data?.current?.temp_c)}
+            {data && data.current && data.current.temp_c &&
+              renderImage(data.current.temp_c)
+            }
           </View>
           <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
             <View style={styles.textContainer}>
               <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#fff' }}>
-                {data?.current?.temp_c ? `${data.current.temp_c}°C` : 'N/A'}
+                {data && data.current && data.current.temp_c ? `${data.current.temp_c}°C` : 'N/A'}
               </Text>
               <View style={{ alignItems: 'center' }}>
-                <Text style={{ fontWeight: 'bold', color: '' }}>
-                  {data?.location?.country}
+                <Text style={{ fontWeight: 'bold' }}>
+                  {data && data.location && data.location.country}
                 </Text>
               </View>
             </View>
@@ -110,8 +108,8 @@ export default FindBar
 
 const styles = StyleSheet.create({
   containerFindBar: {
-    borderWidth: 0.5, // Border width
-    borderColor: '#ffffff', // Border color
+    borderWidth: 0.5,
+    borderColor: '#ffffff',
     height: height / 6,
     marginLeft: 20,
     marginRight: 20,
